@@ -23,18 +23,28 @@
 
         <script>
          // add event handler code here
-            const input = document.getElementById("nameInput");
-            const suggestions = document.getElementById("suggestions");
+            var input = document.getElementById("nameInput");
+            var suggestions = document.getElementById("suggestions");
 
-            input.addEventListener("keyup", async ()=> {
-                const q = input.value.trim();
-                try {
-                    const resp = await axios.get (`/suggest`, {params : {q}});
-                    suggestions.textContent=resp.data.join(", ");
-                } catch (e) {
-                    suggestions.textContent = "";
-                }
-            });
+            input.addEventListener("keyup", showHint());
+
+            function showHint (e){
+                var term = e.target.value;
+
+                axios.get("/suggest",{params:{q:term}})
+                .then(function(res) {
+                    var data = res.data;
+
+                    if(!data|| Array.isArray(data)&& data.length===0){
+                        suggestions.textContent=data.join(",");
+                    } else {
+                        suggestions.textContent = data;
+                    }
+                })
+                .catch(function(){
+                    suggestions.textContent = "no suggestion";
+                });
+            }
             /*document.getElementById("nameInput").addEventListener("keyup",showHint);
             function showHint(e){
                 const term = e.target.value.trim();
