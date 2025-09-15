@@ -23,7 +23,19 @@
 
         <script>
          // add event handler code here
-            document.getElementById("nameInput").addEventListener("keyup",showHint);
+            const input = document.getElementById("nameInput");
+            const suggestions = document.getElementById("suggestions");
+
+            input.addEventListener("keyup", async ()=> {
+                const q = input.value.trim();
+                try {
+                    const resp = await axios.get (`/suggest`, {params : {q}});
+                    suggestions.textContent=resp.data.join(", ");
+                } catch (e) {
+                    suggestions.textContent = "";
+                }
+            });
+            /*document.getElementById("nameInput").addEventListener("keyup",showHint);
             function showHint(e){
                 const term = e.target.value.trim();
                 const suggestionsBox = document.getElementById("suggestions");
@@ -41,7 +53,7 @@
                     console.error(err);
                     suggestionsBox.textContent = "error fetching suggestions";
                 });
-            }
+            }*/
         </script>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
