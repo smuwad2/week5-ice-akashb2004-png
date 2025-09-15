@@ -12,7 +12,7 @@
     <body>
         <div class="container-fluid">
             <div class="row">
-                Name: <input type="text" id="nameInput" onkeyup="showHint()"> <!-- add event -->
+                Name: <input type="text" id="nameInput" class="form-control"> <!-- add event -->
 
             </div>
             <div class="row">
@@ -23,24 +23,24 @@
 
         <script>
          // add event handler code here
-            async function showHint(){
-                const q = document.getElementById('nameInput').value.trim();
-                const box = document.getElementById('suggestions');
+            document.getElementById("nameInput").addEventListener("keyup",showHint);
+            function showHint(e){
+                const term = e.target.value.trim();
+                const suggestionsBox = document.getElementById("suggestions");
 
-                if(q.length===0){ {
-                    box.textContent='';
+                if(!term){
+                    suggestionsBox.textContent="";
                     return;
                 }
-                try {
-                    const res = await axios.get('/suggest',{
-                        params:{q},
-                        responseType: 'text'
-                    });
-                    box.textContent = res.data;
-                } catch (err) {
+
+                axios.get("/suggest",{params:{q:term}})
+                .then((res) => {
+                    suggestionsBox.textContent = res.data;
+                })
+                .catch((err) => {
                     console.error(err);
-                    box.textContent = '(Suggestions: no suggestion)';
-                }
+                    suggestionsBox.textContent = "error fetching suggestions";
+                });
             }
         </script>
 
