@@ -23,7 +23,8 @@
             function getData() {
                 var limit = document.getElementById("limit").value;
                 var type = document.getElementById("type").value;
-                var output = document.getElementById("result"); // renamed here
+                var output = document.getElementById("result");
+                // renamed here
 
                 axios.get("/data", { params: { type: type, limit: limit } })
                     .then(function(res) {
